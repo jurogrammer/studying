@@ -1,0 +1,11 @@
+SELECT *
+FROM city
+JOIN country ON city.CountryCode = country.Code
+JOIN countrylanguage ON city.CountryCode = countrylanguage.CountryCode
+
+Tip)
+city Table과 조인하라.
+1.country테이블과 조인하라. 조건은 시티 테이블의 CountryCode와 country테이블의 Code일치
+2.countrylanguage테이블과 조인하라. 조건은 시티 테이블의 CountryCode와 countrylanguage테이블의 CountryCode 일치.
+
+3중조인 완성~

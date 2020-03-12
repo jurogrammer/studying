@@ -1,0 +1,13 @@
+SELECT *
+FROM city
+WHERE CountryCode = (Select CountryCode
+					 FROM city
+					 WHERE Name = 'Seoul')
+
+Tip)
+-I don't know Country Code but i know that it's city contains seoul
+주의사항.
+where의 Att와 Select Att는 동일해야 함.(당연한게, 
+CountryCode = value라고 했을 때, CountryCode에 value와 일치하는 값 찾아라
+-> Value에 Function을 넣음으로써 Function의 value가 return한 값이 CountryCode에 있어야할 값이므로.
+

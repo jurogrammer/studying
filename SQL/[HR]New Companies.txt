@@ -1,0 +1,44 @@
+https://www.hackerrank.com/challenges/the-company/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+직관적이나 더러운 코드.
+sol)
+SELECT Company.company_code,Company.founder,t1.t1_sum,t2.t2_sum,t3.t3_sum,t4.t4_sum
+FROM Company
+
+JOIN(
+SELECT company_code,COUNT(distinct lead_manager_code) as t1_sum
+FROM Lead_Manager
+GROUP BY company_code) as t1 ON Company.company_code = t1.company_code
+
+JOIN(
+SELECT company_code, COUNT(distinct senior_manager_code) as t2_sum
+FROM Senior_Manager
+GROUP BY company_code) as t2 ON Company.company_code = t2.company_code
+
+JOIN(
+SELECT company_code, COUNT(distinct manager_code) as t3_sum
+FROM Manager
+GROUP BY company_code) as t3 ON Company.company_code = t3.company_code
+
+JOIN(
+SELECT company_code, COUNT(distinct employee_code) as t4_sum
+FROM Employee
+GROUP BY company_code) as t4 ON Company.company_code = t4.company_code
+
+ORDER BY Company.company_code
+
+----
+
+employee 테이블을 보니 lead_manager,senior_manager이 모두 나와서 employee테이블의 managers,employee를 보고 COUNT하고,
+founder도 필요하므로 COMPANY 테이블을 조인하여 company_code 기준으로 group by하여 managers,employee를 COUNT(DISTINCT)해준다. (중복있을 수 있다고 문제 설명에 나와있음)
+founder도 aggregation이 필요하므로 이전에 배운 MAX()를 이용하여 단일 값으로 표현해준다.
+
+그에 따른 코드는
+sol2)
+SELECT e.company_code,MAX(Company.founder), COUNT(DISTINCT lead_manager_code), COUNT(DISTINCT senior_manager_code), COUNT(DISTINCT manager_code), COUNT(DISTINCT employee_code)
+FROM Employee as e
+JOIN Company ON e.company_code = Company.company_code
+GROUP BY e.company_code
+ORDER BY e.company_code
+
+이전보다 더 가독성 좋은 코드가 되었다.

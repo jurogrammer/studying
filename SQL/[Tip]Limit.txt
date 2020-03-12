@@ -1,0 +1,7 @@
+SELECT *
+FROM city
+ORDER BY CountryCode , Population DESC limit 10
+
+
+Tip)
+상위 10개만 보여줘.

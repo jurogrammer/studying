@@ -1,0 +1,21 @@
+Query the list of CITY names from STATION that do not start with vowels and do not end with vowels. Your result cannot contain duplicates.
+
+
+SELECT DISTINCT CITY
+FROM STATION
+WHERE CITY RLIKE '^[^aeiou].+[^aeiou]$'
+
+/*
+^[aeiou] : 집합 안에 있는 원소가 첫글자 시작.
+
+^[^aeiou] : 집합 안 ^는 여집합을 의미함. 따라서 첫글자가 aeiou 중 하나로 시작 안하는 것
+
+. : 임의의 한 문자
++ : 앞 문자가 하나 이상 있음.
+따라서 .+ : 임의의 한 문자가 하나이상 있다. => 임의의 문자들.
+
+[aeiou]$ :  집한 안에 있는 원소 중 하나가 마지막 문자 끝.
+
+따라서 위 조건절의 의미는 CITY 필드에서 다음 정규 표현식과 같은 것을 찾아라
+다음 정규표현식은 첫글자가 모음으로 시작하지 않고, 중간 문자는 임의의 것이며, 마지막 문자도 모음으로 끝나지 말아야 한다.
+*/

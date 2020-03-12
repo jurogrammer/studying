@@ -1,0 +1,21 @@
+Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. Your result cannot contain duplicates.
+
+
+
+
+
+sol1)
+SELECT DISTINCT CITY
+FROM STATION
+WHERE RIGHT(CITY,1)= 'a' OR RIGHT(CITY,1)= 'e' OR RIGHT(CITY,1)= 'i' OR RIGHT(CITY,1)= 'o' OR RIGHT(CITY,1)= 'u'
+
+sol2)
+select distinct(CITY) from STATION where CITY like '%[aeiou]' ;
+
+sol3)
+SELECT DISTINCT city FROM   station 
+WHERE  city  LIKE '%A' 
+or  city  LIKE '%E' 
+or city  LIKE '%I' 
+or city  LIKE '%O' 
+or city  LIKE '%U';

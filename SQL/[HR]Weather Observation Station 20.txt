@@ -1,0 +1,28 @@
+https://www.hackerrank.com/challenges/weather-observation-station-20/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+
+so1l)
+SET @r = -1;
+SELECT ROUND(TEMP_TABLE.LAT_N,4)
+FROM(
+    SELECT @r:=@r+1 as rowIdx, LAT_N
+    FROM STATION
+    ORDER BY LAT_N
+    ) AS TEMP_TABLE
+WHERE TEMP_TABLE.rowIdx = (SELECT FLOOR(COUNT(*)/2) FROM STATION)
+
+
+sol2)
+SET @r = -1;
+
+SELECT ROUND(TEMP_TABLE.LAT_N,4)
+FROM(
+    SELECT @r:=@r+1 as rowIdx, LAT_N
+    FROM STATION
+    ORDER BY LAT_N
+    ) AS TEMP_TABLE
+WHERE TEMP_TABLE.rowIdx = @r/2
+
+r이 전역변수(?)로 정해진 듯. 그래서 최종 인덱스 = @r이므로 @r/2로 메디안 구함(전체 행 수가 홀수인 것은 확인함)
+
+SQL에선 상수를 return하기 위해 SELECT구문으로 써야하는데, 변수로도 대체할 수 있는 좋은 예제.

@@ -1,0 +1,8 @@
+SELECT CountryCode, Max(Population)
+From city
+GROUP BY CountryCode
+HAVING MAX(Population)>8000000
+
+Tip)
+HAVING -> 집계함수에서 조건을 걸고 싶을 때.
+따라서 반드시 GROUP BY 다음에 나와야 함.

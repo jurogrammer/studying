@@ -1,0 +1,13 @@
+Query the list of CITY names starting with vowels (i.e., a, e, i, o, or u) from STATION. Your result cannot contain duplicates.
+
+
+
+sol1)
+SELECT DISTINCT CITY
+FROM STATION
+WHERE (LEFT(CITY,1)='a')or LEFT(CITY,1)='e' or LEFT(CITY,1)='i' or LEFT(CITY,1)='o' or LEFT(CITY,1)='u'
+
+sol2)
+SELECT DISTINCT CITY
+FROM STATION
+WHERE CITY REGEXP '^[aeiou]'

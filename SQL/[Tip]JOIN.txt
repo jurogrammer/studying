@@ -1,0 +1,7 @@
+SELECT *
+FROM city
+JOIN country ON city.CountryCode = country.Code
+
+Tip)
+JOIN하는데
+ON(조건) 둘 같은 걸로 조인.

@@ -1,0 +1,11 @@
+SELECT CountryCode, Name, SUM(Population)
+FROM city
+GROUP BY CountryCode,Name WITH ROLLUP
+
+
+Tip)
+중간 합계를 보고 싶을 때.
+CountryCode가 여러개 있음. 그 CountryCode에 대한 Population의 중간합계를 보고 싶다.
+그 CountryCode는 Name에 의해 여러개 생겼었음.
+따라서 CountryCode Name Population에 대해 집계테이블 생성.
+그리고 CountryCode로 집계하고, Name에 의해 Population중간 집계 생성.

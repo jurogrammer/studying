@@ -1,0 +1,54 @@
+https://www.hackerrank.com/challenges/occupations/problem?h_r=next-challenge&h_v=zen
+
+
+SET @r1=0, @r2=0, @r3 =0, @r4=0;
+SELECT MIN(Doctor),Min(Professor),Min(Singer),Min(Actor)
+FROM
+    (SELECT 
+        CASE Occupation WHEN 'Doctor' THEN @r1:=@r1+1
+                        WHEN 'Professor' THEN @r2:=@r2+1
+                        WHEN 'Singer' THEN @r3:=@r3+1
+                        WHEN 'Actor' THEN @r4:=@r4+1 END AS RowLine,
+        CASE WHEN Occupation = 'Doctor' THEN Name END AS Doctor,
+        CASE WHEN Occupation = 'Professor' THEN Name END AS Professor,
+        CASE WHEN Occupation = 'Singer' THEN Name END AS Singer,
+        CASE WHEN Occupation = 'Actor' THEN Name END AS Actor
+    FROM OCCUPATIONS ORDER BY Name) as t
+GROUP BY RowLine
+
+----
+컨셉.
+result가 열 별로 정렬된 Doctor Professor, Singer, Actor 출력해야 함.
+값이 존재하지 않을 경우엔 NULL값을 출력하고.
+
+주어진 테이블은 OCCUPATIONS(이름,Occupation) 구조.
+
+접근
+각 Occupation별로 열을 만들어서 합치는 느낌.
+이를 어떻게 구현할 것이냐?
+테이블을 형성할 것인데, TEMP(RowLine,Doctor,Professor, Singer, Actor) 생성.
+Doctor,Professor, Singer, Actor의 Value는 OCCUPATIONS 행 하나씩 읽어들일 때마다 occupation열에 기입하는 Name임.
+One-Hot코딩.
+row는 첫번째 Doctor면 1 두번째면 2
+그리고 이름 순으로 정렬되야 하므로 ORDER BY Name
+이렇게 TEMP 테이블 생성.
+
+최종적으로는 row별로 값이 만들어져야 함.
+따라서 MAX(Doctor)... 를 통해서 Name 출력
+이때 MAX()의 input이 str_list면 이름순 정렬 시 첫번째 순위 출력
+Null값만 있다면 Null 출력.
+이름 + Null이면 Null무시하여 순위매김
+
+그리고
+group by rowline을 이용하여 rowline별 값 집계 값 출력
+
+그럼 문제에서 원하는 Table이 형성된다.
+
+
+-------
+다른 사람이 적은 내용을 참고해봤는데 매우 직관적이지 못함. 더 좋은 방법이 없는가?
+
+
+그리고 부차적으로 형성된 테이블을 바탕으로 
+
+

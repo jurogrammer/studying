@@ -1,0 +1,9 @@
+SELECT *
+FROM city
+WHERE Population > ANY(Select Population
+					 FROM city
+					 WHERE District = 'New York')
+
+Tip)
+any, some, in 같음.
+ALL일 경우 안에 있는 값 모두 만족. 따라서 MAX(vectors) 이상값 출력.

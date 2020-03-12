@@ -1,0 +1,15 @@
+https://www.hackerrank.com/challenges/earnings-of-employees/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+
+-----
+
+SELECT (months*salary) as earnings, COUNT(*) FROM Employee GROUP BY earnings ORDER BY earnings DESC LIMIT 1; (https://nifannn.github.io/2017/10/23/SQL-Notes-Hackerrank-Top-Earners/)
+
+earnings 기준으로 GROUP BY 하는데, 집계함수로 COUNT함. 즉, earnings가 여러개 있는데, count로 값을 묶어주는 역할.
+
+난 그보다 아래 문법이 더 쉬운 듯.
+
+SELECT MAX(SALARY*MONTHS), COUNT(*)
+FROM EMPLOYEE
+WHERE (SALARY*MONTHS) = (SELECT MAX(SALARY*MONTHS)
+                         FROM EMPLOYEE);   (https://github.com/BlakeBrown/HackerRank-Solutions/blob/master/SQL/3_Aggregation/08_Top%20Earners/Top%20Earners.mysql)

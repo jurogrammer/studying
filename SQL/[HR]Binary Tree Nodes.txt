@@ -1,0 +1,25 @@
+https://www.hackerrank.com/challenges/binary-search-tree-1/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+
+
+sol1)
+SELECT N,
+    CASE WHEN N NOT IN (SELECT P FROM BST WHERE P IS NOT NULL) THEN 'Leaf'
+         WHEN P IS NULL THEN 'Root'
+    ELSE 'Inner' END
+FROM BST
+ORDER BY N;
+
+
+---
+IS NOT 이나 ANY 쓸 때 주의점. arg에 NULL값이 있으면 의도치 않은 값이 나옴.
+따라서 NULL을 제거하여 출력할 것.
+
+또는 이 문제에서는 값이 있는지, 없는지에만 관심이 있으므로,
+SELECT N, CASE WHEN P IS NULL THEN 'Root' 
+WHEN(SELECT COUNT(*) FROM BST WHERE P = A.N) > 0 THEN 'Inner'
+ELSE 'Leaf'
+END
+FROM BST A
+ORDER BY N;
+다음과 같이 처리.
+이는 github의 DeltaForx님꺼 참조!
