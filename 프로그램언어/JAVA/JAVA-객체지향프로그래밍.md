@@ -378,3 +378,284 @@ System.out.println(1);
 
 
 * 지금까지 무수히 많은 예제에서 사용했던 코드다. 이것이 화면에 어떤 내용을 출력하는 것이라는 건 이미 알고 있다. 하지만 도대체 우리가 정의한 적이 없는 이 명령은 무엇일까?를 생각해볼 때가 왔다. 문법적으로 봤을 때 println은 메소드가 틀림없다. 그런데 메소드 앞에 Sytem.out이 있다. System은 클래스이고 out은 그 클래스의 필드(변수)이다. 이 필드가 메소드를 가지고 있는 것은 이 필드 역시 객체라는 것을 알 수 있다. 그리고 System을 인스턴스화한적이 없음에도 불구하고 필드 out에 접근할 수 있는 것은 out이 static이라는 것을 암시한다.
+
+
+
+#### 다형성(Polymorphism)
+
+----
+
+##### 정의
+
+* 하나의 메소드나 클래스가 있을 때 다양한 방법으로 작동하는 것
+
+##### 예시
+
+* 오버로드
+
+  같은 메소드 이름이나 다른 방식으로 작동된다.
+
+```java
+package javapractice;
+
+class A{
+	public String x() {return "x";}
+}
+
+class B extends A {
+	public String y() {return "y";};
+};
+
+public class polyexam {
+	public static void main(String[] args) {
+		A obj1 = new B();
+		B obj2 = new B();
+		System.out.println(obj1.x());
+		System.out.println(obj2.x());
+		System.out.println(obj2.y());
+		
+	}
+}
+```
+
+​			부모클래스가 자식 클래스 객체를 담을 수도 있다. 
+
+* B에서 A의 메소드 x를 오버라이딩할 경우 오버라이딩된 메소드가 출력된다.
+
+```java
+package javapractice;
+
+class A{
+	public String x() {return "x";}
+}
+
+class B extends A {
+	public String y() {return "y";}; //오버라이딩
+	public String x() {return "editted";};
+};
+
+public class polyexam {
+	public static void main(String[] args) {
+		A obj1 = new B();
+		B obj2 = new B();
+		System.out.println(obj1.x()); // editted 출력
+		System.out.println(obj2.x()); // editted 출력
+		System.out.println(obj2.y()); // y 출력
+		
+	}
+}
+
+```
+
+##### 자바에서 이 다형성이 존재하는 이유
+
+* 부모 클래스로 자료형을 선언하여 자식클래스의 객체를 받았다면, 부모클래스에서 정의한 메소드만 호출가능하다. 
+
+```java
+package org.opentutorials.javatutorials.polymorphism;
+class A{
+    public String x(){return "A.x";}
+}
+class B extends A{
+    public String x(){return "B.x";}
+    public String y(){return "y";}
+}
+class B2 extends A{
+    public String x(){return "B2.x";}
+}
+public class PolymorphismDemo1 {
+    public static void main(String[] args) {
+        A obj = new B();
+        A obj2 = new B2();
+        System.out.println(obj.x());
+        System.out.println(obj2.x());
+    }
+}
+```
+
+이 예제에서 보듯, 동일한 데이터 타입 A로 선언하였으나, 받은 자식 클래스 객체가 달라 동일한 메소드를 호출하였음에도 다른 값이 나온다. (다형성)
+
+이를 들어 자바에서 실질적으로 구현되는 것을 살펴보면, (abstract와 연관)
+
+```java
+package org.opentutorials.javatutorials.polymorphism;
+abstract class Calculator{
+    int left, right;
+    public void setOprands(int left, int right){
+        this.left = left;
+        this.right = right;
+    } 
+    int _sum() {
+        return this.left + this.right;
+    }
+    public abstract void sum();  
+    public abstract void avg();
+    public void run(){
+        sum();
+        avg();
+    }
+}
+class CalculatorDecoPlus extends Calculator {
+    public void sum(){
+        System.out.println("+ sum :"+_sum());
+    }
+    public void avg(){
+        System.out.println("+ avg :"+(this.left+this.right)/2);
+    }
+} 
+class CalculatorDecoMinus extends Calculator {
+    public void sum(){
+        System.out.println("- sum :"+_sum());
+    }
+    public void avg(){
+        System.out.println("- avg :"+(this.left+this.right)/2);
+    }
+} 
+public class CalculatorDemo {
+    public static void main(String[] args) { 
+        Calculator c1 = new CalculatorDecoPlus();
+        c1.setOprands(10, 20);
+        c1.run();
+         
+        Calculator c2 = new CalculatorDecoMinus();
+        c2.setOprands(10, 20);
+        c2.run();
+    }
+   
+}
+```
+
+이 예제는 아래에 보이듯 CalculatorDecoPlus와 DecoMinus는 부모 클래스인 Calculator를 상속받았으므로 c1,c2의 데이터 형을 Calculator라고 정의할 수 있다. 이러한 편의성과 함께 아래 예제를 보면 다형성의 필요성을 느낄 수 있다.
+
+```java
+package org.opentutorials.javatutorials.polymorphism;
+abstract class Calculator{
+    int left, right;
+    public void setOprands(int left, int right){
+        this.left = left;
+        this.right = right;
+    } 
+    int _sum() {
+        return this.left + this.right;
+    }
+    public abstract void sum();  
+    public abstract void avg();
+    public void run(){
+        sum();
+        avg();
+    }
+}
+class CalculatorDecoPlus extends Calculator {
+    public void sum(){
+        System.out.println("+ sum :"+_sum());
+    }
+    public void avg(){
+        System.out.println("+ avg :"+(this.left+this.right)/2);
+    }
+} 
+class CalculatorDecoMinus extends Calculator {
+    public void sum(){
+        System.out.println("- sum :"+_sum());
+    }
+    public void avg(){
+        System.out.println("- avg :"+(this.left+this.right)/2);
+    }
+} 
+public class CalculatorDemo {
+    public static void execute(Calculator cal){
+        System.out.println("실행결과");
+        cal.run();
+    }
+    public static void main(String[] args) { 
+        Calculator c1 = new CalculatorDecoPlus();
+        c1.setOprands(10, 20);
+         
+        Calculator c2 = new CalculatorDecoMinus();
+        c2.setOprands(10, 20);
+         
+        execute(c1);
+        execute(c2);
+    }
+}
+```
+
+excute에서 보이는 바와 같이 cal을 Calculator클래스 데이터 형으로 받아  CalculatorDecoPlus와 CalculatorDecoMinus 객체를 받을 수 있게 됬다.
+
+만약 다형성이 없었다면 같은 excute라는 메소드 이름에, 파라미터 자료형이 다르므로 오버로딩을 사용해서 문제를 해결해야 했을 것이다.
+
+위와 같은 방식을 통해 중복피할 수 있음.
+
+
+
+##### Interface와 다형성
+
+```java
+package org.opentutorials.javatutorials.polymorphism;
+interface I2{
+    public String A();
+}
+interface I3{
+    public String B();
+}
+class D implements I2, I3{
+    public String A(){
+        return "A";
+    }
+    public String B(){
+        return "B";
+    }
+}
+public class PolymorphismDemo3 {
+    public static void main(String[] args) {
+        D obj = new D();
+        I2 objI2 = new D();
+        I3 objI3 = new D();
+         
+        obj.A();
+        obj.B();
+         
+        objI2.A();
+        //objI2.B();
+         
+        //objI3.A();
+        objI3.B();
+    }
+}
+```
+
+인터페이스 I2 또는 I3에서 제한된 기능만 사용하게 만들 수 있음.
+
+
+
+아래 예제는 객체지향 언어에서 인터페이스가 어떻게 사용되는지 보기에 좋은 예제!
+
+```java
+package org.opentutorials.javatutorials.polymorphism;
+ 
+interface father{}
+interface mother{}
+interface programmer{
+    public void coding();
+}
+interface believer{}
+class Steve implements father, programmer, believer{
+    public void coding(){
+        System.out.println("fast");
+    }
+}
+class Rachel implements mother, programmer{
+    public void coding(){
+        System.out.println("elegance");
+    }
+}
+public class Workspace{
+    public static void main(String[] args){
+        programmer employee1 = new Steve();
+        programmer employee2 = new Rachel();
+         
+        employee1.coding();
+        employee2.coding();
+    }
+}
+```
+
