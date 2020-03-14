@@ -1,0 +1,10 @@
+SELECT cty.Continent, floor(AVG(ct.Population))
+FROM CITY AS ct
+JOIN COUNTRY AS cty ON ct.CountryCode = cty.Code
+GROUP BY cty.Continent
+
+
+//
+SELECT FROM JOIN을 보면 조인된 테이블에 대해 SELECT가능
+
+[FROM CITY, JOIN COUNTRY]두 개 조인된 테이블에 대해 select한다고 생각.
