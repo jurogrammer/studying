@@ -136,3 +136,4 @@ WindowsDialog, WebDialog일 경우에 비즈니스 로직은 똑같이 작동합
 ### 단점
 
 1. 새로운 object type이 나타날 때마다 subclass를 만들어야 하므로 복잡해집니다.
+
