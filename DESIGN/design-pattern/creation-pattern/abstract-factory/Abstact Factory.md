@@ -158,7 +158,7 @@ Application이 실행되는데, 해당 운영체제가 Mac이나 Win이냐에 �
 
 
 
-# 다른 Pattern과 장단점
+# 다른 Pattern과의 관계
 
 1. 많은 디자인들은 Factory Method로 시작하여 상황이 복잡해지면 Abstract Factory로 발전합니다.
 
