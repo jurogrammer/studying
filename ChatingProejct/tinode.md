@@ -84,7 +84,111 @@ type
 
    * 단톡방을 위한 채널
    * grp + 랜덤 이름으로 지정 ex:) grpYiqEXb4QY6s
-   * 
+
+
+
+session이 `{sub}`패킷을 보냄으로써 토픽에 참여할 수 있습니다. (세션은 클라이언트와 서버가 연결된 상태를 의미하니까 서버 내부적으로 연결 상태를 가지는 것 같음.)
+
+
+
+`{sub}` 3가지 기능을 수행합니다. - 자세한 내용은 `{sub}` 섹션에서 확인.
+
+1. new topic을 생성하고
+2. 유저가 토픽을 구독할 수 있게 하고
+3. 세션을 토픽에 붙여줍니다.
+
+
+
+user가 topic에 참여하면 `{pub}`패킷을 보내서 컨텐츠를 생성할 수 있고,
+ **그 컨텐츠들은 다른 붙여진 세션**을 통해 `{data}`패킷으로 전송이 됩니다.
+
+
+
+user는 `{get}` `{set}`을 통해 topic의 메타 데이터를 불러오고 업데이트할 수 있습니다.
+
+
+
+토픽의 메타 데이터가 변경이 된다면, live sessions에 `{pres}`패킷으로 보고 됩니다.이는 영향을 줄 수 있는 모든 토픽에 전송을 합니다. (ex me packet)
+
+
+
+```
+When user's me topic comes online (i.e. an authenticated session attaches to me topic), a {pres} packet is sent to me topics of all other users, who have peer to peer subscriptions with the first user.
+```
+
+
+
+
+
+# 서버와 연결하는 방법
+
+1. endpoint에 apikey를 넣어서 전송
+   * 데모앱에는 default API key가 포함됨.
+2. connection이 오픈되면 client는 {hi} message를 서버에게 보내야함. 서버는 {ctrl}메시지로 보냄(성공이나 실패나타내는 메세지)
+
+
+
+
+
+# 유저
+
+1. producer and consumer of messages
+2. authentication level
+   1. `auth`
+   2. `anon`
+
+3. 연결이 되면, 클라이언트 어플리케이션은 유저의 권한을 인증하는 {acc} 나 {login} 메세지를 보낼 수 있음. 
+4. 유저의 속성들
+   1. created
+   2. updated
+   3. status
+   4. username (unique string used)
+
+
+
+유저는 서버와 여러 세션을 연결하고 있을 수 있음. 각 세션은 User-Agent를 통해 태깅되어 있음. (클라이언트 구분)
+
+
+
+A user may maintain multisple simultaneous connections (sessions) with the server. Each session is tagged with a client-provided `User Agent` string intended to differentiate client software.
+
+
+
+
+
+
+
+# Authentication
+
+인증 위치 ({acc}, {login})
+
+
+
+token
+
+basic
+
+annoymous
+
+- `rest` is a [meta-method](https://github.com/tinode/chat/blob/master/server/auth/rest) which allows use of external authentication systems by means of JSON RPC.
+
+
+
+authentication method는 어댑터를 통해 구현될 수 있음.
+
+
+
+로그인을 위한 인증, 무엇을 위한 인증... 등등으로 나뉘어 있음.
+
+
+
+
+
+새로운 계정이 생성될 때, 어떤 authentication method를 쓸 것인지 서버에게 알려줘야 함.
+
+When a new account is created, the user must inform the server which authentication method will be later used to gain access to this account as well as provide shared secret, if appropriate. 
+
+
 
 
 
