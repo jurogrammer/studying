@@ -99,7 +99,7 @@ Timer의 Register함수를 시간과 TimerClient포인터와 같이 넘겨주면
 2. 본래의 Door 클래스는 Timer와 전혀 관련이 없습니다.
    
 * Timer와 관련이 없는 Door객체를 생성할 때도 반드시 TimerClient class를 import해줘야 합니다.
-   
+  
 3. 합리적인 요구사항으로 수정함에도 불구하고 타이머가 필요없는 다른 파생클라스까지 모두 악영향을 끼치게 됩니다. (**한 파생클래스의 변경사항이 다른 파생 클래스에 악영향을 미치는 케이스**)
 
    **예**
@@ -180,7 +180,7 @@ class DoorTimerAdapter : public TimerClient {
 2. TimerClient를 DoorTimerAdapter로 구현
 3. TimedDoor은 DoorTimerAdapter를 생성하고, Timer를 넘김
 4. Timer가 TimeOut을 실행하면 DoorTimerAdapter에게 전달
-5. DoorTimerAdapter는 TimeOutMessage를 TimedDoor에게 전파(delegate)한다
+5. DoorTimerAdapter는 TimeOutMessage를 TimedDoor에게 위임(delegate)한다
 
 
 
