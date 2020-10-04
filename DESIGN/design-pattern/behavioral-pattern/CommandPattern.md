@@ -156,4 +156,215 @@ command의 method엔 파라미터를 받지 않습니다. 그런데 비즈니스
 ### 5. Client
 
 * command objects를 생성하고 설정하도록 합니다.
-  * client는 반드시 command cunstructor에 receiver instance를 생성하기 위한 모든 파라미터를 전달할 수 있도록 합니다.
+  * client는 반드시 command constructor에 receiver instance를 생성하기 위한 모든 파라미터를 전달할 수 있도록 합니다.
+
+
+
+
+
+# 코드 구현
+
+### 1. Command
+
+```java
+
+public abstract class Command {
+    public Editor editor;
+    private String backup;
+
+    Command(Editor editor) {
+        this.editor = editor;
+    }
+
+    void backup() {
+        backup = editor.textField.getText();
+    }
+
+    public void undo() {
+        editor.textField.setText(backup);
+    }
+
+    public abstract boolean execute();
+}
+```
+
+
+
+### 2. Copy Command
+
+```java
+public class CopyCommand extends Command {
+
+    public CopyCommand(Editor editor) {
+        super(editor);
+    }
+
+    @Override
+    public boolean execute() {
+        editor.clipboard = editor.textField.getSelectedText();
+        return false;
+    }
+}
+```
+
+
+
+### 3. Paste Command
+
+```java
+public class PasteCommand extends Command {
+
+    public PasteCommand(Editor editor) {
+        super(editor);
+    }
+
+    @Override
+    public boolean execute() {
+        if (editor.clipboard == null || editor.clipboard.isEmpty()) return false;
+
+        backup();
+        editor.textField.insert(editor.clipboard, editor.textField.getCaretPosition());
+        return true;
+    }
+}
+```
+
+
+
+### 4. Cut Command
+
+```java
+public class CutCommand extends Command {
+
+    public CutCommand(Editor editor) {
+        super(editor);
+    }
+
+    @Override
+    public boolean execute() {
+        if (editor.textField.getSelectedText().isEmpty()) return false;
+
+        backup();
+        String source = editor.textField.getText();
+        editor.clipboard = editor.textField.getSelectedText();
+        editor.textField.setText(cutString(source));
+        return true;
+    }
+
+    private String cutString(String source) {
+        String start = source.substring(0, editor.textField.getSelectionStart());
+        String end = source.substring(editor.textField.getSelectionEnd());
+        return start + end;
+    }
+}
+```
+
+
+
+### 5. Command History
+
+```java
+public class CommandHistory {
+    private Stack<Command> history = new Stack<>();
+
+    public void push(Command c) {
+        history.push(c);
+    }
+
+    public Command pop() {
+        return history.pop();
+    }
+
+    public boolean isEmpty() { return history.isEmpty(); }
+}
+```
+
+
+
+### 6. Editor
+
+```java
+public class Editor {
+    public JTextArea textField;
+    public String clipboard;
+    private CommandHistory history = new CommandHistory();
+
+    public void init() {
+        JFrame frame = new JFrame("Text editor (type & use buttons, Luke!)");
+        JPanel content = new JPanel();
+        frame.setContentPane(content);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        textField = new JTextArea();
+        textField.setLineWrap(true);
+        content.add(textField);
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton ctrlC = new JButton("Ctrl+C");
+        JButton ctrlX = new JButton("Ctrl+X");
+        JButton ctrlV = new JButton("Ctrl+V");
+        JButton ctrlZ = new JButton("Ctrl+Z");
+        Editor editor = this;
+        ctrlC.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                executeCommand(new CopyCommand(editor));
+            }
+        });
+        ctrlX.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                executeCommand(new CutCommand(editor));
+            }
+        });
+        ctrlV.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                executeCommand(new PasteCommand(editor));
+            }
+        });
+        ctrlZ.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                undo();
+            }
+        });
+        buttons.add(ctrlC);
+        buttons.add(ctrlX);
+        buttons.add(ctrlV);
+        buttons.add(ctrlZ);
+        content.add(buttons);
+        frame.setSize(450, 200);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    private void executeCommand(Command command) {
+        if (command.execute()) {
+            history.push(command);
+        }
+    }
+
+    private void undo() {
+        if (history.isEmpty()) return;
+
+        Command command = history.pop();
+        if (command != null) {
+            command.undo();
+        }
+    }
+}
+```
+
+
+
+### 7. Client
+
+```java
+public class Demo {
+    public static void main(String[] args) {
+        Editor editor = new Editor();
+        editor.init();
+    }
+}
+```
+
