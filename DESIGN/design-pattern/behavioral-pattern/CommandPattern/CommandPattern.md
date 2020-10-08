@@ -81,10 +81,15 @@ GUI에서 요청한 business logic을 수행합니다.
 
 ##### 구현 절차
 
-1. 대신에 detail request를 을 분리된 commands class로 추출합니다. 해당 요청을 trigger시킬 수 있는 메서드를 지닌 클래스로말이죠.
-   * 메서드를 실행할 때 어떤 객체에서, 어떤 메서드에서, 어떤 argument를 넣는 과정을 거치죠. 이 detail request를 의미합니다. (메서드의 3요소라고 불러줄 싶을 정도네요)
+1. 대신에 detail request를 분리된 commands class로 추출합니다. 해당 요청을 trigger시킬 수 있는 메서드를 지닌 클래스로말이죠. 그리고 이 메서드는 어떤 파라미터도 받지 않습니다.
+
+   * detail request
+
+     메서드를 실행할 때 어떤 객체에서, 어떤 메서드에서, 어떤 argument를 넣는 과정을 거치죠. 이 detail request를 의미합니다. (메서드의 3요소라고 불러줄 싶을 정도네요)
+
    * 이렇게 함으로써 command objects는 다양한 GUI와 business logic objects간 연결고리역할을 하게 됩니다.
-   * GUI Object는 business logic object를 알 필요없이 단순히 command 명령어를 실행할 수 있게 되죠.
+
+   * GUI Object는 business logic object를 알 필요없이 적절한 command의 excute 메서드를 실행하면 됩니다.
 
 ![](https://refactoring.guru/images/patterns/diagrams/command/solution2-en.png)
 
@@ -94,6 +99,7 @@ GUI에서 요청한 business logic을 수행합니다.
    * 이로 얻는 장점은 다음과 같습니다.
      1. GUI가 특정 command에 의존하지 않게 됩니다.
      2. 런타임 중에 GUI의 행동을 바꿀 수 있게 됩니다.
+     3. 컨테이너로 담을 수 있습니다.
 
 
 
@@ -101,7 +107,7 @@ GUI에서 요청한 business logic을 수행합니다.
 
 command의 method엔 파라미터를 받지 않습니다. 그런데 비즈니스 로직을 수행할 땐 파라미터를 넘길 수 밖에 없죠. 어떻게 해야할까요?
 
-사실 이 의문은 구현절차 1의 detail request와 관련이 있습니다. 파라미터 또한 하나의 detail request로 간주합니다. 따라서 business logic method에 들어갈 파라미터를 고려하여 command를 구현하는 클래스생성하는 것이죠. (파라미터가 달라진다면 다른 요청으로 본다는 뜻 같네요.)
+사실 이 의문은 [구현-절차 1]의 detail request와 관련이 있습니다. 파라미터 또한 하나의 detail request로 간주합니다. 따라서 business logic method에 들어갈 파라미터를 고려하여 command를 구현하는 클래스생성하는 것이죠. (파라미터가 달라진다면 다른 요청으로 본다는 뜻 같네요.)
 
 
 
