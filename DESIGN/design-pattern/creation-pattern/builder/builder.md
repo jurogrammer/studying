@@ -2,6 +2,7 @@
 
 * https://refactoring.guru/design-patterns/builder (builder패턴 설명)
 * https://projectlombok.org/features/Builder (lombok)
+* Effetive Java 3/E Item-02
 
 
 
@@ -50,7 +51,7 @@
 
 
 
-### 권장하지 않는 방법2 - giant 생성자
+### 권장하지 않는 방법2 - giant 생성자 (effective java에선 telescope 생성자)
 
 <img src="https://refactoring.guru/images/patterns/diagrams/builder/problem2-2x.png" style="zoom:50%;" />
 
@@ -69,6 +70,48 @@
 
 
 
+### 권장하지 않는 방법3 - JavaBean pattern
+
+#### 방법 설명
+
+java의 javabean 규약에 따라 클래스를 정의한 후, 값을 설정해줍니다.
+
+```java
+public class NutritionFacts {
+    // Parameters initialized to default values (if any)
+    private int servingSize  = -1; // Required; no default value
+    private int servings     = -1; // Required; no default value
+    private int calories     = 0;
+    private int fat          = 0;
+    private int sodium       = 0;
+    private int carbohydrate = 0;
+
+    public NutritionFacts() { }
+    // Setters
+    public void setServingSize(int val)  { servingSize = val; }
+    public void setServings(int val)     { servings = val; }
+    public void setCalories(int val)     { calories = val; }
+    public void setFat(int val)          { fat = val; }
+    public void setSodium(int val)       { sodium = val; }
+    public void setCarbohydrate(int val) { carbohydrate = val; }
+
+    public static void main(String[] args) {
+        NutritionFacts cocaCola = new NutritionFacts();
+        cocaCola.setServingSize(240);
+        cocaCola.setServings(8);
+        cocaCola.setCalories(100);
+        cocaCola.setSodium(35);
+        cocaCola.setCarbohydrate(27);
+    }
+}
+```
+
+#### 문제점
+
+여러 cocaCola를 여러 콜로 설정해주기 때문에 작성하는 코드에 따라 상태가 일정하지 않을 수 있습니다. 즉, 생성 중 다른 쓰레드가 접근하여 값을 변경할 수도 있다는 것이죠.
+
+
+
 # 해결책 - Builder 패턴
 
 Builder 패턴은 object의 생성코드를 생성하려는 클래스의 밖으로 꺼냅니다. 그리고 *builders*라는 개개의 오브젝트에게 그 생성 책임을 맡깁니다. 이 builder는,
@@ -78,7 +121,7 @@ Builder 패턴은 object의 생성코드를 생성하려는 클래스의 밖으�
 
 <img src="https://refactoring.guru/images/patterns/diagrams/builder/solution1-2x.png" style="zoom:50%;" />
 
-[그림의 설명] *The Builder pattern lets you construct complex objects step by step. The Builder doesn’t allow other objects to access the product while it’s being built.*    (여기서 빌더가 객체를 생성하는 중엔 다른 객체들이 접근하지 못한다는 뜻은 해당 패턴을 어떻게 구현하는지 보여드린 뒤 설명드리겠습니다.)
+[그림의 설명] *The Builder pattern lets you construct complex objects step by step. The Builder doesn’t allow other objects to access the product while it’s being built.*   
 
 
 
@@ -86,7 +129,7 @@ Builder 패턴은 object의 생성코드를 생성하려는 클래스의 밖으�
 
 <img src="https://refactoring.guru/images/patterns/content/builder/builder-comic-1-en-2x.png" style="zoom:50%;" />
 
-​	이 그림은, 통나무집, 벽돌집, 보석집을 지으려고 하려고 합니다. 모두다 다르나, 외벽을 짓고, 지붕을 올리는 등 동일한 행동 패턴을 가지고 있기 때문에 동	일한 행동패턴을 지닌 빌더로 다른 스타일의 집을 만들 수 있다는 그림입니다.
+​	이 그림은, 통나무집, 벽돌집, 보석집을 지으려고 하려고 합니다. 모두다 다르나, 외벽을 짓고, 지붕을 올리는 등 동일한 행동 패턴을 가지고 있기 때문에 동일한 행동패턴을 지닌 빌더로 다른 스타일의 집을 만들 수 있다는 그림입니다.
 
 
 
@@ -131,59 +174,3 @@ Builder 패턴은 object의 생성코드를 생성하려는 클래스의 밖으�
 #### Director
 
 * 자주 사용되는 builder를 구현합니다.
-
-
-
-
-
-# 또 다른 예
-
-<img src="https://refactoring.guru/images/patterns/diagrams/builder/example-en-2x.png" style="zoom:50%;" />
-
-여기서 주목해야할 부분은 두가지입니다.
-
-1. Car Builder와 CarManual Builder가 만드는 interface는 다릅니다.
-
-   이전 하우스 예제에서는 벽돌집, 오두막집, 보석집을 집이라는 인터페이스로 추상화시킬 수 있었지만, Car와 Manual은 그럴 수 없습니다. 서로 다르기 때문이지요. 
-
-   ***따라서 getResult()를 구현하도록 하였습니다. 타입이 달라질 수 있기 때문이지요.***
-
-   이렇기 때문에, Director에서 반환된 값은 Car나 Manual이 될 수 없습니다. 이를 반환하도록 한다면, 구체적인 클래스에 의존하게 됩니다.(DIP 위반) ***따라서 반환값이 builder입니다.***
-
-   (혹시나 행동 패턴이 같다고 LSP를 따른 것이 아니냐할 수 있지만, Builder가 필드를 정하기 위한 행동 패턴이 동일한 것이지, Car나 Manual의 행동 패턴이 동일한 것이 아닙니다.)
-
-2. reset()을 통해 builder내부에서 객체를 생성하고, 다 만들었을 때 getResult()를 통해 객체를 반환하도록 합니다.
-
-   위에서 해결책 중 사진에 대한 설명을 이제 말씀드릴 수 있겠습니다.  (builder가 생성 중엔 왜 다른 object가 접근할 수 없는지)
-
-   builder가 자신의 내부에(필드 값) 객체를 생성하도록 하고, 이 객체의 접근은 private로 선언함으로써 오로지 builder만이 해당 객체에 접근하여 값을 수정하도록 하고 있습니다. 그렇기 때문에 사진 설명처럼 말할 수 있는 것이지요.
-
-
-
-# 어떤 상황에 적용할까?
-
-1. 생성자의 파라미터가 많아질 때
-
-
-
-# 장,단점
-
-### 장점
-
-1. 필드를 하나씩 하나씩 생성할 수 있습니다
-2. 동일한 생성 코드를 재사용할 수 있습니다.
-3. 복잡한 객체 생성 로직을 비즈니스 로직과 분리시켜줍니다.
-
-
-
-### 단점
-
-빌더 패턴은 새로운 클래스들을 생성해야 하므로 전체적으로 코드의 복잡성이 증가합니다. 
-
-
-
-# 다른 패턴과 연관관계
-
-1. Factory Method가 복잡해지면 Builder패턴으로 바꿀 수 있습니다.
-   * 객체를 생성하는 패턴이 좀 더 복잡해지기 때문입니다.
-2. Builder는 복잡한 object를 한단계 한단계 생성하는 것에 초점을 두었고, Abstract Factory는 연관된 objects를 생성하는데 촛점을 두었습니다. 따라서 Abstract패턴은 단번에 product를 반환하고, Builder는 product를 보내주기 전에 한단계 한단계 생성하도록 합니다.

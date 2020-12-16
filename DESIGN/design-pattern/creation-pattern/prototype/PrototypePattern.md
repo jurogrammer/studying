@@ -30,7 +30,7 @@
 
 #### 프로토타입 패턴에서 프로토타입 용어
 
-* **자기 자신을 복제하는 기능**을 지원하는 **객체**를 프로토타입이라고 부릅니다.   (자기 자신을 어떻게 복제하는지는 아래에서 자세히 설명드리겠습니다.)
+* **자기 자신을 복제하는 기능**을 지원하는 **객체**를 프로토타입이라고 부릅니다.  
 
   `An object that supports cloning is called a prototype.`
 
@@ -215,104 +215,3 @@ public class RedCircle extends Circle {
 <img src="https://refactoring.guru/images/patterns/diagrams/prototype/structure-prototype-cache-indexed-2x.png" style="zoom: 67%;" />
 
 
-
-# 비판 - 자바에서 프로토타입 패턴 문제점
-
-프로토타입을 구현한 객체들의 다른 내용을 사용하려면 캐스팅을 해주어야 합니다. 이때는 다른 메서드도 추가할 것이니 abstract를 적용해보겠습니다.
-
-
-
-#### Shape [prototype class]
-
-```java
-abstract class Shape {
-    private int x;
-    private int y;
-
-    public Shape(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public Shape(Shape shape) {
-        this.x = shape.x;
-        this.y = shape.y;
-    }
-
-    public abstract Shape clone();
-}
-```
-
-이 프로토타입은 도형이라는 것만 복제할 것이기 때문에 필드에 int x, int y를 선언해주었습니다.
-
-
-
-#### Circle
-
-```java
-public class Circle extends Shape{
-    private int radius;
-
-    public Circle(int x, int y, int radius) {
-        super(x, y);
-        this.radius = radius;
-    }
-
-    public Circle(Circle circle) {
-        super(circle);
-        this.radius = circle.radius;
-    }
-
-    public int getRadius() {
-        return radius;
-    }
-
-    @Override
-    public Shape clone() {
-        return new Circle(this);
-    }
-}
-```
-
-도형이라는 프로토타입을 상속받아 Circle이라는 속성을 부여해주는 radius 필드를 추가하였습니다. 그리고 이 radius에 접근하려면 getRadius() 메서드를 선언주어야겠지요.
-
-
-
-#### Client
-
-```java
-public class Client {
-    public static void main(String[] args) {
-        Circle circle = new Circle(3,5,110);
-
-
-        //에러
-        Shape circle1 = circle.clone();
-        circle1.getRadius();
-
-        //캐스팅
-        Circle circle2 = (Circle) circle.clone();
-        circle2.getRadius();
-
-        /**
-         * 3자에게 주입받아 타입을 모른 채 사용할 수 있도록 하려 함. 그래서 Shape라는 프로토타입 인터페이스를
-         * 선언해주었으나, Circle이라는 class 의미를 부여한 radius에 접근하는 getRadius()를 사용하기 위해서는
-         * object의 타입을 확인해주고 Circle로 캐스팅해주어야 했음.
-         */
-    }
-}
-```
-
-주석에 달아놓은 것처럼, 3자에게 주입받아 타입을 모른 채 사용할 수 있어야 하는데, getRadius에 접근하려면 캐스팅이 필요합니다. 즉, 객체를 이용하려면 타입을 알아야만 한다는 것이지요. 
-
-캐스팅은 좋지 못한 방법이라 생각하기 때문에 자바에는 그리 적절하진 않은 것 같습니다.
-
-따라서 타입이 동적으로 변하는 파이썬이나 자바스크립트에 더 어울리는 방법이라 보이네요.
-
-
-
-# 다른 패턴과 관계
-
-1. Factory method에서 복잡해지면 Prototype적용 가능합니다.
-   * 생성 책임 분리
-2. Abstract Factory가 factory methods의 모음이라 말할 수 있는데, 이 factory method의 생성하는 부분을 prototype 패턴으로 대체할 수 있습니다.
