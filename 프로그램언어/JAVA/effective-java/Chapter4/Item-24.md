@@ -173,3 +173,4 @@ outer class의 instance가 관련이 덜한 instance로 보여지도록 view로 
 * nonstatic 문맥에서 사용될 때만 outer class instance참조 가능(익명 클래스와 유사)
 * static member 못가짐
 * 가독성 위해 짧게 작성해야 함
+

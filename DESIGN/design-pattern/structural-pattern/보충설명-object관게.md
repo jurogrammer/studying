@@ -42,7 +42,7 @@
 
 ```java
 public class Student {
-  public void play ( Sport sport) {
+  public void play (Sport sport) {
     excute.play(sport);
   }
 }

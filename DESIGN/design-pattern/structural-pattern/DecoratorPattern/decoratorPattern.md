@@ -7,7 +7,16 @@
 # DecoratorPattern이란?
 
 * structural design pattern
+
 * 기존 객체에 새로운 기능을 추가하고 싶을 때, 새로운 기능을 가진 wrapper 객체 내부에 기존 객체를 넣음으로써 기능을 추가하는 패턴입니다.
+
+  **wiki**
+
+  decorator pattern allows behavior to be added to an individual object, dynamically, without affecting the behavior of other objects from the same class
+
+  **guru**
+
+  decorator pattern lets you attach new behaviors to objects by placing these objects inside special wrapper objects that contain the behaviors
 
 <img src="https://refactoring.guru/images/patterns/content/decorator/decorator-2x.png" style="zoom:50%;" />
 
@@ -87,8 +96,6 @@
 
 
 # 해결책
-
-
 
 ### 상속보다는 Aggregation 또는 Composition을 이용하라
 
